@@ -1,7 +1,4 @@
-use serde::{Deserializer, Deserialize, Serialize};
-use serde::de::{self};
-use std::fmt;
-
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct Coord {
@@ -85,54 +82,8 @@ pub struct Weather {
     pub clouds: Clouds,
     pub dt: u32,
     pub sys: Option<Sys>,
-    pub timezone:Option<i32>,
+    pub timezone: Option<i32>,
     pub id: i32,
     pub name: String,
     pub cod: Option<u32>,
 }
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
-pub struct WeatherMultiple {
-    #[serde(deserialize_with = "derserialize_u32_or_string")]
-    cod: u32,
-    calctime: Option<f32>,
-    count: Option<f32>,
-    cnt: Option<u32>,
-    list: Vec<Weather>,
-}
-
-
-//https://stackoverflow.com/questions/37870428/convert-two-types-into-a-single-type-with-serde
-struct Deserializeu32orString;
-
-impl<'de> de::Visitor<'de> for Deserializeu32orString {
-    type Value = u32;
-
-    fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        formatter.write_str("sdfaan integer or a string")
-    }
-
-    fn visit_u32<E>(self, v: u32) -> Result<Self::Value, E>
-
-    where
-        E: de::Error,
-    {
-        Ok(v)
-    }
-
-    fn visit_str<E>(self, _v: &str) -> Result<Self::Value, E>
-    where
-        E: de::Error,
-    {
-        Ok(0)
-    }
-}
-
-fn derserialize_u32_or_string<'de, D>(deserializer: D) -> Result<u32, D::Error>
-where
-    D: Deserializer<'de>,
-{
-    deserializer.deserialize_any(Deserializeu32orString)
-}
-
-

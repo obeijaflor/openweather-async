@@ -1,15 +1,15 @@
 pub enum Units {
+    Standard,
     Metric,
-    Fahrenheit,
-    Kelvin,
+    Imperial,
 }
 
 impl Units {
     pub fn value(&self) -> &str {
         match *self {
+            Units::Standard => "standard",
             Units::Metric => "metric",
-            Units::Fahrenheit => "fahrenheit",
-            Units::Kelvin => "kelvin",
+            Units::Imperial => "imperial",
         }
     }
 }
