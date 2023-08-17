@@ -14,9 +14,9 @@ pub enum Units {
 /// Represents a coordinate location (latitude, longitude) on Earth.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct Coordinate {
-    /// Latitude, as a decimal number.
+    /// Latitude, given as a decimal number.
     pub lat: Option<f32>,
-    /// Longitude, as a decimal number.
+    /// Longitude, given as a decimal number.
     pub lon: Option<f32>,
 }
 
@@ -49,7 +49,7 @@ pub struct MainInformation {
     pub temp_min: f32,
     /// Maximum temperature for the observed area, in the specified units.
     pub temp_max: f32,
-    /// Humidity, as a percentage.
+    /// Humidity, given as a percentage.
     pub humidity: f32,
     /// Atmospheric pressure at sea level, in hectopascals (hPa).
     pub pressure: f32,
@@ -112,7 +112,7 @@ pub struct CurrentWeatherPayload {
     pub coord: Coordinate,
     /// Represents current high-level weather conditions.
     #[serde(rename = "weather")]
-    pub weather_conditions: Option<Vec<WeatherCondition>>,
+    pub weather_conditions: Vec<WeatherCondition>,
     /// An internal parameter, which seems to be string of unknown purpose.
     pub base: Option<String>,
     /// Provides "main" info like current temp, pressure, humidity, etc.
@@ -130,17 +130,19 @@ pub struct CurrentWeatherPayload {
     /// Cloudiness information.
     #[serde(rename = "clouds")]
     pub cloudiness: Cloudiness,
-    /// Data calculation time, as a UNIX timestamp, relative to UTC.
+    /// Data calculation time, given as a UNIX timestamp, relative to UTC.
     #[serde(rename = "dt")]
     pub dt_unix_timestamp: u32,
     /// Bad name.  Some internal "system" information, but also sunset/sunrise info.
     pub sys: CurrentWeatherSys,
-    /// Timezone shift relative to UTC.
+    /// Timezone shift, given as a number of seconds relative to UTC.
     pub timezone: Option<i32>,
     /// The city ID.
-    pub id: i32,
+    #[serde(rename = "id")]
+    pub city_id: i32,
     /// The city name.
-    pub name: String,
+    #[serde(rename = "name")]
+    pub city_name: String,
     /// An internal parameter - some sort of integer, probably a status code.
     pub cod: Option<u32>,
 }
@@ -156,9 +158,9 @@ pub struct CurrentWeatherSys {
     /// Country code.
     pub country: String,
     #[serde(rename = "sunrise")]
-    /// Sunrise time, as a UNIC timestamp relative to UTC.
+    /// Sunrise time, given as a UNIX timestamp relative to UTC.
     pub sunrise_timestamp: Option<u32>,
-    /// Sunset time, as a UNIC timestamp relative to UTC.
+    /// Sunset time, given as a UNIX timestamp relative to UTC.
     #[serde(rename = "sunset")]
     pub sunset_timestamp: Option<u32>,
 }
@@ -169,15 +171,18 @@ pub struct CurrentWeatherSys {
 /// The spec is very vague and could use some work.  Types are not well-defined.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct Forecast5Payload {
-    /// An internal parameter - some sort of integer, probably a status code.
-    pub cod: Option<u32>,
-    /// An internal parameter.
-    pub message: String,
+    /// An internal parameter - some sort of string, probably representing a status code.
+    ///
+    /// (Aside:  Why the HELL is this a string for the `/forecast` endpoint, but an integer for the
+    /// `/weather` endpoint?)
+    pub cod: Option<String>,
+    /// An internal parameter - some sort of integer.
+    pub message: u32,
     /// The number of timestamps returned in the API response.
     pub cnt: usize,
     /// A list of weather forecasts for the next 5 days, with samples every 3 hours.
     #[serde(rename = "list")]
-    pub forecast_list: Forecast5DaysList,
+    pub forecast_list: Vec<Forecast5DaysList>,
     /// Another bad name.  Some city information, but also sunset/sunrise info.
     #[serde(rename = "city")]
     pub city_info: Forecast5CityInfo,
@@ -187,21 +192,23 @@ pub struct Forecast5Payload {
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct Forecast5CityInfo {
     /// The city ID.
-    pub id: i32,
+    #[serde(rename = "id")]
+    pub city_id: i32,
     /// The city name.
-    pub name: String,
+    #[serde(rename = "name")]
+    pub city_name: String,
     /// Location coordinates for the provided weather information.
     pub coord: Coordinate,
     /// Country code.
     pub country: String,
     /// Population of the city.  (Why is this part of the API?  Who knows.)
     pub population: usize,
-    /// Timezone shift relative to UTC.
+    /// Timezone shift, given as a number of seconds relative to UTC.
     pub timezone: Option<i32>,
-    /// Sunrise time, as a UNIC timestamp relative to UTC.
+    /// Sunrise time, given as a UNIX timestamp relative to UTC.
     #[serde(rename = "sunrise")]
     pub sunrise_timestamp: Option<u32>,
-    /// Sunset time, as a UNIC timestamp relative to UTC.
+    /// Sunset time, given as a UNIX timestamp relative to UTC.
     #[serde(rename = "sunset")]
     pub sunset_timestamp: Option<u32>,
 }
@@ -209,10 +216,10 @@ pub struct Forecast5CityInfo {
 /// A list of weather forecasts for the next 5 days, with samples every 3 hours.
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct Forecast5DaysList {
-    /// Data calculation time, as a UNIX timestamp, relative to UTC.
+    /// Data calculation time, given as a UNIX timestamp, relative to UTC.
     #[serde(rename = "dt")]
     pub dt_unix_timestamp: u32,
-    /// Data calculation time, in ISO 8601 format, relative to UTC.
+    /// Data calculation time, given in ISO 8601 format, relative to UTC.
     #[serde(rename = "dt_txt")]
     pub dt_iso8601_str: String,
     /// Provides "main" info like current temp, pressure, humidity, etc.

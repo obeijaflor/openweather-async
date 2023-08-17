@@ -8,21 +8,20 @@ mod test {
     use std::env;
 
     #[tokio::test]
-    async fn get_weather_by_coordinates() -> Result<(), Box<dyn std::error::Error>> {
+    async fn get_weather() -> Result<(), Box<dyn std::error::Error>> {
         let token =
             env::var("OPENWEATHER_API_KEY").expect("OPENWEATHER_API_KEY environment variable");
         let client = OpenWeatherClient::new(token, Units::Metric);
-        let sf_weather = client
-            .get_weather_by_coordinates(37.766602, -122.45108)
-            .await?;
+        let sf_weather = client.get_weather(37.766602, -122.45108).await?;
         // verify weather is for correct city, San Francisco, CA, US (city id of 5391997)
-        assert_eq!(sf_weather.id, 5391997);
+        assert_eq!(sf_weather.city_id, 5391997);
+        assert_eq!(sf_weather.city_name, "San Francisco County");
         Ok(())
     }
 }
 
 impl OpenWeatherClient {
-    pub async fn get_weather_by_coordinates(
+    pub async fn get_weather(
         &self,
         lat: f32,
         lon: f32,
