@@ -1,8 +1,19 @@
 pub use crate::models::*;
-pub use crate::units::*;
 
-pub mod weather;
+pub mod current;
+pub mod forecast5;
 
+impl Units {
+    pub fn value(&self) -> &str {
+        match *self {
+            Units::Standard => "standard",
+            Units::Metric => "metric",
+            Units::Imperial => "imperial",
+        }
+    }
+}
+
+/// A client for interacting with the OpenWeatherMap.org API.
 pub struct OpenWeatherClient {
     api_key: String,
     client: reqwest::Client,

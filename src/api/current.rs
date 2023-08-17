@@ -1,21 +1,11 @@
 use crate::api::OpenWeatherClient;
-use crate::models::*;
+use crate::models::CurrentWeatherPayload;
 
 #[cfg(test)]
 mod test {
-    use crate::api::{OpenWeatherClient, Units};
+    use crate::api::OpenWeatherClient;
+    use crate::models::Units;
     use std::env;
-
-    #[tokio::test]
-    async fn get_weather_by_city_id() -> Result<(), Box<dyn std::error::Error>> {
-        let token =
-            env::var("OPENWEATHER_API_KEY").expect("OPENWEATHER_API_KEY environment variable");
-        let client = OpenWeatherClient::new(token, Units::Metric);
-        let tokyo_weather = client.get_weather_by_city_id(1850147).await?;
-        // verify weather is for correct city, Tokyo, JP (city id of 1850147)
-        assert_eq!(tokyo_weather.id, 1850147);
-        Ok(())
-    }
 
     #[tokio::test]
     async fn get_weather_by_coordinates() -> Result<(), Box<dyn std::error::Error>> {
@@ -32,24 +22,11 @@ mod test {
 }
 
 impl OpenWeatherClient {
-    pub async fn get_weather_by_city_id(&self, city_id: u32) -> Result<Weather, reqwest::Error> {
-        let res = self
-            .build_request(
-                "weather",
-                &vec![(String::from("id"), format!("{}", city_id))],
-            )
-            .await?
-            .send()
-            .await?;
-
-        Ok(res.json::<Weather>().await?)
-    }
-
     pub async fn get_weather_by_coordinates(
         &self,
         lat: f32,
         lon: f32,
-    ) -> Result<Weather, reqwest::Error> {
+    ) -> Result<CurrentWeatherPayload, reqwest::Error> {
         let res = self
             .build_request(
                 "weather",
@@ -62,6 +39,6 @@ impl OpenWeatherClient {
             .send()
             .await?;
 
-        Ok(res.json::<Weather>().await?)
+        res.json::<CurrentWeatherPayload>().await
     }
 }
