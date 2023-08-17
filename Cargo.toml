@@ -5,7 +5,7 @@ authors = ["Rachel Shaw"]
 edition = "2018"
 license = "MIT"
 description = "Another async library for use with the openweathermap.org API"
-repository = "https://github.com/obeijaflor/openweather-async"
+repository = "https://github.com/obeijaflor/openweather-async2"
 readme = "README.md"
 
 [dependencies]
