@@ -45,9 +45,11 @@ pub struct MainInformation {
     pub temp: f32,
     /// "Feels like" temperature, in the specified units.
     pub feels_like: f32,
-    /// Minimum temperature for the observed area, in the specified units.
+    /// Current minimum temperature over the observed area, in the specified units.  For details on
+    /// this field, see the API Documentation at <https://openweathermap.org/forecast5#min>.
     pub temp_min: f32,
-    /// Maximum temperature for the observed area, in the specified units.
+    /// Current maximum temperature over the observed area, in the specified units.  For details on
+    /// this field, see the API Documentation at <https://openweathermap.org/forecast5#min>.
     pub temp_max: f32,
     /// Humidity, given as a percentage.
     pub humidity: f32,
@@ -102,7 +104,7 @@ pub struct Cloudiness {
     pub percentage: Option<u32>,
 }
 
-/// Payload from the API 2.5 /weather endpoint.
+/// Payload from the API 2.5 `/weather` endpoint.
 ///
 /// Provides current weather data as defined here: <https://openweathermap.org/current>.
 /// The spec is very vague and could use some work.  Types are not well-defined.
@@ -157,15 +159,15 @@ pub struct CurrentWeatherSys {
     pub id: Option<u32>,
     /// Country code.
     pub country: String,
-    #[serde(rename = "sunrise")]
     /// Sunrise time, given as a UNIX timestamp relative to UTC.
-    pub sunrise_timestamp: Option<u32>,
+    #[serde(rename = "sunrise")]
+    pub sunrise_timestamp: i64,
     /// Sunset time, given as a UNIX timestamp relative to UTC.
     #[serde(rename = "sunset")]
-    pub sunset_timestamp: Option<u32>,
+    pub sunset_timestamp: i64,
 }
 
-/// Payload from the API 2.5 /forecast endpoint.
+/// Payload from the API 2.5 `/forecast` endpoint.
 ///
 /// Provides current weather data as defined here: <https://openweathermap.org/forecast5>.
 /// The spec is very vague and could use some work.  Types are not well-defined.
@@ -182,7 +184,7 @@ pub struct Forecast5Payload {
     pub cnt: usize,
     /// A list of weather forecasts for the next 5 days, with samples every 3 hours.
     #[serde(rename = "list")]
-    pub forecast_list: Vec<Forecast5DaysList>,
+    pub forecast_list: Vec<Forecast5ListItem>,
     /// Another bad name.  Some city information, but also sunset/sunrise info.
     #[serde(rename = "city")]
     pub city_info: Forecast5CityInfo,
@@ -207,15 +209,15 @@ pub struct Forecast5CityInfo {
     pub timezone: Option<i32>,
     /// Sunrise time, given as a UNIX timestamp relative to UTC.
     #[serde(rename = "sunrise")]
-    pub sunrise_timestamp: Option<u32>,
+    pub sunrise_timestamp: i64,
     /// Sunset time, given as a UNIX timestamp relative to UTC.
     #[serde(rename = "sunset")]
-    pub sunset_timestamp: Option<u32>,
+    pub sunset_timestamp: i64,
 }
 
-/// A list of weather forecasts for the next 5 days, with samples every 3 hours.
+/// An item inside the list of weather forecasts provided by the Forecast5 API endpoint.  
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
-pub struct Forecast5DaysList {
+pub struct Forecast5ListItem {
     /// Data calculation time, given as a UNIX timestamp, relative to UTC.
     #[serde(rename = "dt")]
     pub dt_unix_timestamp: u32,
@@ -226,7 +228,7 @@ pub struct Forecast5DaysList {
     pub main: MainInformation,
     /// Represents current high-level weather conditions.
     #[serde(rename = "weather")]
-    pub weather_conditions: Option<Vec<WeatherCondition>>,
+    pub weather_conditions: Vec<WeatherCondition>,
     /// Cloudiness information.
     #[serde(rename = "clouds")]
     pub cloudiness: Cloudiness,
