@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 /// Represents the accepted units for use with OpenWeatherMap.org.  Units are documented at the
 /// (confusingly named) URL <https://openweathermap.org/current#data>.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
 pub enum Units {
     /// Standard is the default.  Temperatures are presented in Kelvin, e.g. 296 K.
     Standard,
