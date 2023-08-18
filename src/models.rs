@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 /// Represents the accepted units for use with OpenWeatherMap.org.  Units are documented at the
 /// (confusingly named) URL <https://openweathermap.org/current#data>.
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Units {
     /// Standard is the default.  Temperatures are presented in Kelvin, e.g. 296 K.
     Standard,
@@ -12,7 +13,7 @@ pub enum Units {
 }
 
 /// Represents a coordinate location (latitude, longitude) on Earth.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Coordinate {
     /// Latitude, given as a decimal number.
     pub lat: Option<f32>,
@@ -24,7 +25,7 @@ pub struct Coordinate {
 /// with an ID for the relevant representative icon.
 ///
 /// See <https://openweathermap.org/weather-conditions> for more info.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct WeatherCondition {
     /// Weather condition ID.
     pub id: u32,
@@ -39,7 +40,7 @@ pub struct WeatherCondition {
 
 /// Provides "main" weather information most people are probably looking for, like temperatures,
 /// pressure, humidity, etc.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct MainInformation {
     /// Current temperature, in the specified units.
     pub temp: f32,
@@ -64,7 +65,7 @@ pub struct MainInformation {
 }
 
 //// Provides wind information.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct WindInformation {
     /// Wind speed in m/s (standard/metric) or mph (imperial).
     pub speed: f32,
@@ -75,7 +76,7 @@ pub struct WindInformation {
 }
 
 /// If present, provides rainfall totals.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RainfallTotals {
     /// Rainfall total over the last hour.
     #[serde(rename = "1h")]
@@ -86,7 +87,7 @@ pub struct RainfallTotals {
 }
 
 /// If present, provides snowfall totals.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct SnowfallTotals {
     /// Snowfall total over the last hour.
     #[serde(rename = "1h")]
@@ -97,7 +98,7 @@ pub struct SnowfallTotals {
 }
 
 /// Represents cloudiness statistics.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Cloudiness {
     /// Cloudiness percentage.
     #[serde(rename = "all")]
@@ -108,7 +109,7 @@ pub struct Cloudiness {
 ///
 /// Provides current weather data as defined here: <https://openweathermap.org/current>.
 /// The spec is very vague and could use some work.  Types are not well-defined.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CurrentWeatherPayload {
     /// Location coordinates for the provided weather information.
     pub coord: Coordinate,
@@ -150,7 +151,7 @@ pub struct CurrentWeatherPayload {
 }
 
 /// Provides some internal information and sunrise/sunset info as a UNIX timestamp.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CurrentWeatherSys {
     /// type - internal parameter
     #[serde(rename = "type")]
@@ -171,7 +172,7 @@ pub struct CurrentWeatherSys {
 ///
 /// Provides current weather data as defined here: <https://openweathermap.org/forecast5>.
 /// The spec is very vague and could use some work.  Types are not well-defined.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Forecast5Payload {
     /// An internal parameter - some sort of string, probably representing a status code.
     ///
@@ -191,7 +192,7 @@ pub struct Forecast5Payload {
 }
 
 /// Provides some city information along with sunset/sunrise timestamps.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Forecast5CityInfo {
     /// The city ID.
     #[serde(rename = "id")]
@@ -216,7 +217,7 @@ pub struct Forecast5CityInfo {
 }
 
 /// An item inside the list of weather forecasts provided by the Forecast5 API endpoint.  
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Forecast5ListItem {
     /// Data calculation time, given as a UNIX timestamp, relative to UTC.
     #[serde(rename = "dt")]
@@ -251,7 +252,7 @@ pub struct Forecast5ListItem {
 }
 
 /// Horrible name.  Whatever "sys" means in the API documentation.
-#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Forecast5Sys {
     /// Part of the day (n - night, d - day)
     #[serde(rename = "pod")]
