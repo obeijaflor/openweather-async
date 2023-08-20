@@ -13,7 +13,7 @@ pub enum Units {
 }
 
 /// Represents a coordinate location (latitude, longitude) on Earth.
-#[derive(Serialize, Deserialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Copy, Clone)]
 pub struct Coordinates {
     /// Latitude, given as a decimal number.
     pub lat: f32,
