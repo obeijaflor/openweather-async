@@ -14,11 +14,11 @@ pub enum Units {
 
 /// Represents a coordinate location (latitude, longitude) on Earth.
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Coordinate {
+pub struct Coordinates {
     /// Latitude, given as a decimal number.
-    pub lat: Option<f32>,
+    pub lat: f32,
     /// Longitude, given as a decimal number.
-    pub lon: Option<f32>,
+    pub lon: f32,
 }
 
 /// Represents a weather condition and shows an overall description of the current weather, along
@@ -112,7 +112,7 @@ pub struct Cloudiness {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CurrentWeatherPayload {
     /// Location coordinates for the provided weather information.
-    pub coord: Coordinate,
+    pub coord: Coordinates,
     /// Represents current high-level weather conditions.
     #[serde(rename = "weather")]
     pub weather_conditions: Vec<WeatherCondition>,
@@ -201,7 +201,7 @@ pub struct Forecast5CityInfo {
     #[serde(rename = "name")]
     pub city_name: String,
     /// Location coordinates for the provided weather information.
-    pub coord: Coordinate,
+    pub coord: Coordinates,
     /// Country code.
     pub country: String,
     /// Population of the city.  (Why is this part of the API?  Who knows.)
