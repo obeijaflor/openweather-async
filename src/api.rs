@@ -14,6 +14,7 @@ impl Units {
 }
 
 /// A client for interacting with the OpenWeatherMap.org API.
+#[derive(Debug)]
 pub struct OpenWeatherClient {
     api_key: String,
     client: reqwest::Client,
